@@ -75,9 +75,9 @@ export const api = {
     toggleAdmin: (id) => request(`/admin/users/${id}/admin`, { method: 'POST' }),
     approveTeacher: (id) => request(`/admin/users/${id}/approve`, { method: 'POST' }),
     content: (type = 'all') => request(`/admin/content?type=${type}`),
-    deleteNote: (id) => request(`/admin/content/notes/${id}`, { method: 'DELETE' }),
-    deleteVideo: (id) => request(`/admin/content/videos/${id}`, { method: 'DELETE' }),
-    deleteExam: (id) => request(`/admin/content/exams/${id}`, { method: 'DELETE' }),
+    deleteNote: (id, payload = {}) => request(`/admin/content/notes/${id}`, { method: 'DELETE', body: payload }),
+    deleteVideo: (id, payload = {}) => request(`/admin/content/videos/${id}`, { method: 'DELETE', body: payload }),
+    deleteExam: (id, payload = {}) => request(`/admin/content/exams/${id}`, { method: 'DELETE', body: payload }),
     payments: (params = {}) => {
       const qs = new URLSearchParams(
         Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v != null))

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { FaTrash, FaFilePdf, FaPlay } from 'react-icons/fa6';
+import { FaTrash, FaFilePdf, FaPlay, FaEye, FaXmark } from 'react-icons/fa6';
 import { api } from '../api';
 
 function formatDate(iso) {
@@ -17,6 +17,8 @@ export default function Content() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [busy, setBusy] = useState(null);
+  const [deleteItem, setDeleteItem] = useState(null);
+  const [deleteReason, setDeleteReason] = useState('');
 
   const load = async (t = type) => {
     setLoading(true);
@@ -36,14 +38,20 @@ export default function Content() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [type]);
 
-  const remove = async (item) => {
-    if (!window.confirm(`Delete this ${item.type}? This cannot be undone.`)) return;
-    setBusy(`${item.type}-${item.id}`);
+  const openDelete = (item) => {
+    setDeleteItem(item);
+    setDeleteReason('');
+  };
+
+  const confirmDelete = async () => {
+    if (!deleteItem) return;
+    setBusy(`${deleteItem.type}-${deleteItem.id}`);
     setError('');
     try {
-      if (item.type === 'note') await api.admin.deleteNote(item.id);
-      else if (item.type === 'video') await api.admin.deleteVideo(item.id);
-      else await api.admin.deleteExam(item.id);
+      if (deleteItem.type === 'note') await api.admin.deleteNote(deleteItem.id, { reason: deleteReason.trim() });
+      else if (deleteItem.type === 'video') await api.admin.deleteVideo(deleteItem.id, { reason: deleteReason.trim() });
+      else await api.admin.deleteExam(deleteItem.id, { reason: deleteReason.trim() });
+      setDeleteItem(null);
       await load();
     } catch (err) {
       setError(err.message);
@@ -128,9 +136,16 @@ export default function Content() {
                   </td>
                   <td>{formatDate(item.created_at)}</td>
                   <td>
-                    <button className="btn btn-danger btn-small" disabled={busy === `${item.type}-${item.id}`} onClick={() => remove(item)}>
-                      <FaTrash /> Delete
-                    </button>
+                    <div className="row-actions">
+                      {item.url ? (
+                        <a className="btn btn-secondary btn-small" href={item.url} target="_blank" rel="noreferrer">
+                          <FaEye /> View
+                        </a>
+                      ) : null}
+                      <button className="btn btn-danger btn-small" disabled={busy === `${item.type}-${item.id}`} onClick={() => openDelete(item)}>
+                        <FaTrash /> Delete
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -138,6 +153,36 @@ export default function Content() {
           </table>
         </div>
       )}
+
+      {deleteItem ? (
+        <div className="modal-overlay">
+          <div className="modal-card">
+            <button className="modal-close" onClick={() => setDeleteItem(null)} aria-label="Close">
+              <FaXmark />
+            </button>
+            <h3 className="modal-title">Delete {deleteItem.type}?</h3>
+            <p className="muted">
+              <strong>{deleteItem.title}</strong> by {deleteItem.owner}. This cannot be undone.
+            </p>
+            <label className="field">
+              <span>Reason for deletion (sent to the teacher)</span>
+              <textarea
+                className="text-input"
+                rows={4}
+                placeholder="e.g. Violates platform content guidelines…"
+                value={deleteReason}
+                onChange={(e) => setDeleteReason(e.target.value)}
+              />
+            </label>
+            <div className="checkout-actions">
+              <button className="btn btn-ghost" onClick={() => setDeleteItem(null)}>Cancel</button>
+              <button className="btn btn-danger" disabled={busy === `${deleteItem.type}-${deleteItem.id}`} onClick={confirmDelete}>
+                <FaTrash /> Delete
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
