@@ -3380,3 +3380,7 @@ a {
 .menu-danger {
   color: var(--danger);
 }
+
+.section-title-spaced {
+  margin-top: 24px;
+}

@@ -7,8 +7,10 @@ const navItems = [
   { to: '/users', label: 'Users' },
   { to: '/content', label: 'Content' },
   { to: '/payments', label: 'Payments' },
+  { to: '/withdrawals', label: 'Withdrawals' },
   { to: '/levels', label: 'Levels' },
   { to: '/token-packages', label: 'Token Packages' },
+  { to: '/profile', label: 'Profile' },
 ];
 
 export default function Layout() {

@@ -63,6 +63,7 @@ export const api = {
   login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
   logout: () => request('/auth/logout', { method: 'POST' }),
   me: () => request('/auth/me'),
+  updateProfile: (payload) => request('/auth/profile', { method: 'PUT', body: payload }),
   admin: {
     stats: () => request('/admin/stats'),
     users: (params = {}) => {
@@ -84,6 +85,14 @@ export const api = {
       ).toString();
       return request(`/admin/payments${qs ? `?${qs}` : ''}`);
     },
+    withdrawals: (params = {}) => {
+      const qs = new URLSearchParams(
+        Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v != null))
+      ).toString();
+      return request(`/admin/withdrawals${qs ? `?${qs}` : ''}`);
+    },
+    processWithdrawal: (id, payload = {}) => request(`/admin/withdrawals/${id}/process`, { method: 'POST', body: payload }),
+    rejectWithdrawal: (id, payload = {}) => request(`/admin/withdrawals/${id}/reject`, { method: 'POST', body: payload }),
     levels: () => request('/admin/levels'),
     createLevel: (payload) => request('/admin/levels', { method: 'POST', body: payload }),
     updateLevel: (id, payload) => request(`/admin/levels/${id}`, { method: 'PUT', body: payload }),

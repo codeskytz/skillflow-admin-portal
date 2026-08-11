@@ -53,6 +53,13 @@ export function AuthProvider({ children }) {
     setUserState(null);
   };
 
+  const updateProfile = async (payload) => {
+    const data = await api.updateProfile(payload);
+    setUser(data.user);
+    setUserState(data.user);
+    return data.user;
+  };
+
   const value = useMemo(
     () => ({
       user,
@@ -61,6 +68,7 @@ export function AuthProvider({ children }) {
       isAuthenticated: Boolean(token),
       login,
       logout,
+      updateProfile,
     }),
     [user, token, refreshing]
   );
