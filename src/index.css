@@ -3309,3 +3309,74 @@ a {
   padding: 2px 8px;
   border-radius: 6px;
 }
+
+/* ---------- Row action dropdown ---------- */
+
+.row-menu {
+  position: relative;
+  display: inline-block;
+}
+
+.dots-btn {
+  width: 34px;
+  height: 34px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--white);
+  color: var(--navy);
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.dots-btn:hover {
+  border-color: var(--gold);
+}
+
+.row-dropdown {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 4px);
+  z-index: 20;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  min-width: 160px;
+  box-shadow: 0 10px 26px rgba(6, 26, 48, 0.16);
+  overflow: hidden;
+  padding: 4px;
+}
+
+.row-dropdown-item {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 10px 12px;
+  border: none;
+  background: none;
+  border-radius: 7px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--navy-dark);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.row-dropdown-item:hover {
+  background: var(--off-white);
+}
+
+.row-dropdown-item:disabled {
+  opacity: 0.5;
+  cursor: default;
+}
+
+.menu-approve {
+  color: var(--success);
+}
+
+.menu-danger {
+  color: var(--danger);
+}

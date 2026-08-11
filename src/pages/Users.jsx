@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useState } from 'react';
+import { FaEllipsisVertical } from 'react-icons/fa6';
 import { api } from '../api';
 
 function formatDate(iso) {
@@ -12,6 +13,7 @@ export default function Users() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [busyId, setBusyId] = useState(null);
+  const [menuId, setMenuId] = useState(null);
 
   const load = useCallback(async (page = 1) => {
     setLoading(true);
@@ -30,6 +32,15 @@ export default function Users() {
     load(1);
   }, [load]);
 
+  useEffect(() => {
+    if (!menuId) return;
+    const handler = (e) => {
+      if (!e.target.closest('.row-menu')) setMenuId(null);
+    };
+    document.addEventListener('mousedown', handler);
+    return () => document.removeEventListener('mousedown', handler);
+  }, [menuId]);
+
   const action = async (fn, id) => {
     setBusyId(id);
     setError('');
@@ -41,6 +52,32 @@ export default function Users() {
     } finally {
       setBusyId(null);
     }
+  };
+
+  const run = (fn, id) => {
+    setMenuId(null);
+    action(fn, id);
+  };
+
+  const menuItems = (u) => {
+    const items = [];
+    if (u.role === 'teacher' && !u.teacher_profile?.is_approved) {
+      items.push({ label: 'Approve', fn: api.admin.approveTeacher, className: 'menu-approve' });
+    }
+    if (!u.is_suspended) {
+      items.push({
+        label: u.is_admin ? 'Remove admin' : 'Make admin',
+        fn: api.admin.toggleAdmin,
+      });
+    }
+    if (!u.is_admin) {
+      items.push({
+        label: u.is_suspended ? 'Unsuspend' : 'Suspend',
+        fn: api.admin.toggleSuspend,
+        className: u.is_suspended ? '' : 'menu-danger',
+      });
+    }
+    return items;
   };
 
   return (
@@ -122,25 +159,27 @@ export default function Users() {
                     </td>
                     <td>{formatDate(u.created_at)}</td>
                     <td>
-                      <div className="row-actions">
-                        {u.role === 'teacher' && !u.teacher_profile?.is_approved ? (
-                          <button className="btn btn-primary btn-small" disabled={busyId === u.id} onClick={() => action(api.admin.approveTeacher, u.id)}>
-                            Approve
-                          </button>
-                        ) : null}
-                        {!u.is_admin ? (
-                          <>
-                            <button className="btn btn-secondary btn-small" disabled={busyId === u.id} onClick={() => action(api.admin.toggleAdmin, u.id)}>
-                              {u.is_admin ? 'Remove admin' : 'Make admin'}
-                            </button>
-                            <button
-                              className={`btn btn-small ${u.is_suspended ? 'btn-secondary' : 'btn-danger'}`}
-                              disabled={busyId === u.id}
-                              onClick={() => action(api.admin.toggleSuspend, u.id)}
-                            >
-                              {u.is_suspended ? 'Unsuspend' : 'Suspend'}
-                            </button>
-                          </>
+                      <div className="row-menu">
+                        <button
+                          className="dots-btn"
+                          aria-label="Actions"
+                          onClick={() => setMenuId(menuId === u.id ? null : u.id)}
+                        >
+                          <FaEllipsisVertical />
+                        </button>
+                        {menuId === u.id ? (
+                          <div className="row-dropdown">
+                            {menuItems(u).map((item) => (
+                              <button
+                                key={item.label}
+                                className={`row-dropdown-item ${item.className || ''}`}
+                                disabled={busyId === u.id}
+                                onClick={() => run(item.fn, u.id)}
+                              >
+                                {item.label}
+                              </button>
+                            ))}
+                          </div>
                         ) : null}
                       </div>
                     </td>
