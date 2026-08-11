@@ -324,12 +324,12 @@ a {
 }
 
 .btn-danger {
-  background: var(--danger);
+  background: #d64545;
   color: var(--white);
 }
 
 .btn-danger:hover {
-  opacity: 0.9;
+  background: #b53333;
 }
 
 .btn-small {
