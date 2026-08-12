@@ -60,6 +60,7 @@ async function request(path, { method = 'GET', body, headers = {} } = {}) {
 }
 
 export const api = {
+  settings: () => request('/settings'),
   login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
   logout: () => request('/auth/logout', { method: 'POST' }),
   me: () => request('/auth/me'),

@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { NavLink, Outlet, useNavigate } from 'react-router-dom';
 import { useAuth } from '../AuthContext';
+import CurrencySwitcher from './CurrencySwitcher';
 
 const navItems = [
   { to: '/', label: 'Dashboard', end: true },
@@ -35,7 +36,10 @@ export default function Layout() {
           <img src="/logo.png" alt="Skillflow" className="brand-logo" />
           <span>Skillflow Admin</span>
         </div>
-        <div className="topbar-avatar">{user?.name?.charAt(0) || 'A'}</div>
+        <div className="topbar-right">
+          <CurrencySwitcher />
+          <div className="topbar-avatar">{user?.name?.charAt(0) || 'A'}</div>
+        </div>
       </header>
 
       {menuOpen ? <div className="backdrop" onClick={closeMenu} /> : null}

@@ -1,14 +1,12 @@
 import { useEffect, useState } from 'react';
 import { FaPlus, FaTrash } from 'react-icons/fa6';
 import { api } from '../api';
-
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+import { useCurrency } from '../CurrencyContext';
 
 const empty = { name: '', description: '', tokens: '', price: '', is_active: true };
 
 export default function TokenPackages() {
+  const { formatMoney } = useCurrency();
   const [packages, setPackages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
@@ -155,7 +153,7 @@ export default function TokenPackages() {
                       <div className="muted small">{p.description}</div>
                     </td>
                     <td>{p.tokens}</td>
-                    <td>{formatMoney(p.price)} {p.currency}</td>
+                    <td>{formatMoney(p.price)}</td>
                     <td>
                       <span className={`status-pill ${p.is_active ? 'status-success' : 'status-failed'}`}>
                         {p.is_active ? 'active' : 'inactive'}

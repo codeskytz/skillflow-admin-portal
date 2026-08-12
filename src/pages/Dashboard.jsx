@@ -13,10 +13,7 @@ import {
   FaTriangleExclamation,
 } from 'react-icons/fa6';
 import { api } from '../api';
-
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+import { useCurrency } from '../CurrencyContext';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -24,6 +21,7 @@ function formatDate(iso) {
 }
 
 export default function Dashboard() {
+  const { formatMoney } = useCurrency();
   const [stats, setStats] = useState(null);
   const [recent, setRecent] = useState([]);
   const [error, setError] = useState('');
@@ -89,7 +87,7 @@ export default function Dashboard() {
       <section className="revenue-hero">
         <div className="revenue-main">
           <span className="revenue-label">Total Revenue Collected</span>
-          <strong className="revenue-value">TZS {formatMoney(stats.revenue)}</strong>
+          <strong className="revenue-value">{formatMoney(stats.revenue)}</strong>
           <span className="revenue-sub">{stats.successful_payments} successful payments</span>
         </div>
         <div className="revenue-metrics">
@@ -184,7 +182,7 @@ export default function Dashboard() {
                     <td className="mono">{p.reference}</td>
                     <td>{p.user?.name || '—'}</td>
                     <td>{p.purpose === 'ai_tokens' ? 'AI Tokens' : 'Content'}</td>
-                    <td>{formatMoney(p.amount)} {p.currency}</td>
+                    <td>{formatMoney(p.amount)}</td>
                     <td>
                       <span className={`status-pill status-${p.status}`}>{p.status}</span>
                     </td>

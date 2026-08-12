@@ -3384,3 +3384,29 @@ a {
 .section-title-spaced {
   margin-top: 24px;
 }
+
+/* ---------- Currency switcher ---------- */
+
+.currency-switch {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  background: var(--white);
+}
+
+.currency-btn {
+  border: none;
+  background: transparent;
+  padding: 6px 10px;
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.currency-btn-active {
+  background: var(--navy);
+  color: var(--gold-light);
+}

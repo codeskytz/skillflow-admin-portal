@@ -1,9 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { api } from '../api';
-
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+import { useCurrency } from '../CurrencyContext';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -11,6 +8,7 @@ function formatDate(iso) {
 }
 
 export default function Payments() {
+  const { formatMoney } = useCurrency();
   const [filters, setFilters] = useState({ status: '', purpose: '' });
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -89,7 +87,7 @@ export default function Payments() {
                     </td>
                     <td>{p.purpose === 'ai_tokens' ? 'AI Tokens' : 'Content'}</td>
                     <td>
-                      {formatMoney(p.amount)} {p.currency}
+                      {formatMoney(p.amount)}
                     </td>
                     <td>{p.channel}</td>
                     <td>

@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 import { FaEllipsisVertical, FaXmark } from 'react-icons/fa6';
 import { api } from '../api';
-
-function formatMoney(value) {
-  return Number(value || 0).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
+import { useCurrency } from '../CurrencyContext';
 
 function formatDate(iso) {
   if (!iso) return '—';
@@ -12,6 +9,7 @@ function formatDate(iso) {
 }
 
 export default function Withdrawals() {
+  const { formatMoney } = useCurrency();
   const [status, setStatus] = useState('');
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -124,7 +122,7 @@ export default function Withdrawals() {
                       <strong>{w.receiver_name || '—'}</strong>
                       <div className="muted small">{w.phone || '—'}</div>
                     </td>
-                    <td><strong>{formatMoney(w.amount)} TZS</strong></td>
+                    <td><strong>{formatMoney(w.amount)}</strong></td>
                     <td>{formatDate(w.created_at)}</td>
                     <td>
                       <span className={`status-pill status-${w.status}`}>{w.status}</span>
@@ -179,11 +177,11 @@ export default function Withdrawals() {
             </button>
             <h3 className="modal-title">{actionItem.kind === 'process' ? 'Approve &amp; Pay' : 'Reject Withdrawal'}</h3>
             <p className="muted">
-              {actionItem.item.user?.name} requested <strong>{formatMoney(actionItem.item.amount)} TZS</strong>.
+              {actionItem.item.user?.name} requested <strong>{formatMoney(actionItem.item.amount)}</strong>.
             </p>
             {actionItem.kind === 'process' ? (
               <p className="muted">
-                Pay <strong>{formatMoney(actionItem.item.amount)} TZS</strong> to{' '}
+                Pay <strong>{formatMoney(actionItem.item.amount)}</strong> to{' '}
                 <strong>{actionItem.item.receiver_name || actionItem.item.user?.name || 'the teacher'}</strong>{' '}
                 at <strong>{actionItem.item.phone || actionItem.item.user?.phone || 'no phone on file'}</strong>.
               </p>
