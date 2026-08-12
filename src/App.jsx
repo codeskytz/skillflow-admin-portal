@@ -8,6 +8,7 @@ import Users from './pages/Users';
 import Content from './pages/Content';
 import Payments from './pages/Payments';
 import Withdrawals from './pages/Withdrawals';
+import LevelRequests from './pages/LevelRequests';
 import Levels from './pages/Levels';
 import TokenPackages from './pages/TokenPackages';
 import Profile from './pages/Profile';
@@ -30,6 +31,7 @@ function AppRoutes() {
         <Route path="content" element={<Content />} />
         <Route path="payments" element={<Payments />} />
         <Route path="withdrawals" element={<Withdrawals />} />
+        <Route path="level-requests" element={<LevelRequests />} />
         <Route path="levels" element={<Levels />} />
         <Route path="token-packages" element={<TokenPackages />} />
         <Route path="profile" element={<Profile />} />

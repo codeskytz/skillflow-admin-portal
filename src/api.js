@@ -94,6 +94,14 @@ export const api = {
     },
     processWithdrawal: (id, payload = {}) => request(`/admin/withdrawals/${id}/process`, { method: 'POST', body: payload }),
     rejectWithdrawal: (id, payload = {}) => request(`/admin/withdrawals/${id}/reject`, { method: 'POST', body: payload }),
+    levelRequests: (params = {}) => {
+      const qs = new URLSearchParams(
+        Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v != null))
+      ).toString();
+      return request(`/admin/level-requests${qs ? `?${qs}` : ''}`);
+    },
+    approveLevelRequest: (id, payload = {}) => request(`/admin/level-requests/${id}/approve`, { method: 'POST', body: payload }),
+    rejectLevelRequest: (id, payload = {}) => request(`/admin/level-requests/${id}/reject`, { method: 'POST', body: payload }),
     levels: () => request('/admin/levels'),
     createLevel: (payload) => request('/admin/levels', { method: 'POST', body: payload }),
     updateLevel: (id, payload) => request(`/admin/levels/${id}`, { method: 'PUT', body: payload }),

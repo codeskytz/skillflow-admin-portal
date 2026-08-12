@@ -9,6 +9,7 @@ const navItems = [
   { to: '/content', label: 'Content' },
   { to: '/payments', label: 'Payments' },
   { to: '/withdrawals', label: 'Withdrawals' },
+  { to: '/level-requests', label: 'Level Requests' },
   { to: '/levels', label: 'Levels' },
   { to: '/token-packages', label: 'Token Packages' },
   { to: '/profile', label: 'Profile' },
