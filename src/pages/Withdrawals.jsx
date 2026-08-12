@@ -100,6 +100,7 @@ export default function Withdrawals() {
             <thead>
               <tr>
                 <th>Teacher</th>
+                <th>Pay to</th>
                 <th>Amount</th>
                 <th>Requested</th>
                 <th>Status</th>
@@ -110,7 +111,7 @@ export default function Withdrawals() {
             <tbody>
               {data.withdrawals.length === 0 ? (
                 <tr>
-                  <td colSpan="6" className="muted">No withdrawals found.</td>
+                  <td colSpan="7" className="muted">No withdrawals found.</td>
                 </tr>
               ) : (
                 data.withdrawals.map((w) => (
@@ -118,7 +119,10 @@ export default function Withdrawals() {
                     <td>
                       <strong>{w.user?.name || '—'}</strong>
                       <div className="muted small">{w.user?.email}</div>
-                      {w.user?.phone ? <div className="muted small">{w.user.phone}</div> : null}
+                    </td>
+                    <td>
+                      <strong>{w.receiver_name || '—'}</strong>
+                      <div className="muted small">{w.phone || '—'}</div>
                     </td>
                     <td><strong>{formatMoney(w.amount)} TZS</strong></td>
                     <td>{formatDate(w.created_at)}</td>
@@ -179,7 +183,9 @@ export default function Withdrawals() {
             </p>
             {actionItem.kind === 'process' ? (
               <p className="muted">
-                Mark as paid once you have sent the money to the teacher ({actionItem.item.user?.phone || 'no phone on file'}).
+                Pay <strong>{formatMoney(actionItem.item.amount)} TZS</strong> to{' '}
+                <strong>{actionItem.item.receiver_name || actionItem.item.user?.name || 'the teacher'}</strong>{' '}
+                at <strong>{actionItem.item.phone || actionItem.item.user?.phone || 'no phone on file'}</strong>.
               </p>
             ) : (
               <p className="muted">The amount will be refunded to the teacher&apos;s wallet.</p>
