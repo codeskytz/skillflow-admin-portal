@@ -12,6 +12,7 @@ const navItems = [
   { to: '/level-requests', label: 'Level Requests' },
   { to: '/levels', label: 'Levels' },
   { to: '/token-packages', label: 'Token Packages' },
+  { to: '/legacy-archive', label: 'Legacy Archive' },
   { to: '/profile', label: 'Profile' },
 ];
 

@@ -1,4 +1,9 @@
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000/api/v1';
+// Relative by default so requests go through the dev server's /api proxy
+// (see vite.config.js) and stay same-origin — no CORS, and it keeps working
+// when the app is opened from another device on the network, where
+// "localhost" would point at that device rather than the API.
+// Set VITE_API_URL to an absolute URL only when the API is on another host.
+const API_URL = import.meta.env.VITE_API_URL || '/api/v1';
 
 export function getToken() {
   return localStorage.getItem('sf_admin_token');
@@ -106,6 +111,18 @@ export const api = {
     createLevel: (payload) => request('/admin/levels', { method: 'POST', body: payload }),
     updateLevel: (id, payload) => request(`/admin/levels/${id}`, { method: 'PUT', body: payload }),
     deleteLevel: (id) => request(`/admin/levels/${id}`, { method: 'DELETE' }),
+    // Documents the Firestore import could not place. Read-only apart from
+    // marking one reviewed — nothing from the snapshot can be deleted here.
+    legacyArchive: (params = {}) => {
+      const qs = new URLSearchParams(
+        Object.fromEntries(Object.entries(params).filter(([, v]) => v !== '' && v != null))
+      ).toString();
+      return request(`/admin/legacy-archive${qs ? `?${qs}` : ''}`);
+    },
+    legacyArchiveSummary: () => request('/admin/legacy-archive/summary'),
+    legacyArchiveEntry: (id) => request(`/admin/legacy-archive/${id}`),
+    resolveLegacyArchive: (id, resolved = true) =>
+      request(`/admin/legacy-archive/${id}/resolve`, { method: 'POST', body: { resolved } }),
     tokenPackages: () => request('/admin/token-packages'),
     createTokenPackage: (payload) => request('/admin/token-packages', { method: 'POST', body: payload }),
     updateTokenPackage: (id, payload) => request(`/admin/token-packages/${id}`, { method: 'PUT', body: payload }),

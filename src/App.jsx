@@ -11,6 +11,7 @@ import Withdrawals from './pages/Withdrawals';
 import LevelRequests from './pages/LevelRequests';
 import Levels from './pages/Levels';
 import TokenPackages from './pages/TokenPackages';
+import LegacyArchive from './pages/LegacyArchive';
 import Profile from './pages/Profile';
 
 function Protected() {
@@ -34,6 +35,7 @@ function AppRoutes() {
         <Route path="level-requests" element={<LevelRequests />} />
         <Route path="levels" element={<Levels />} />
         <Route path="token-packages" element={<TokenPackages />} />
+        <Route path="legacy-archive" element={<LegacyArchive />} />
         <Route path="profile" element={<Profile />} />
       </Route>
       <Route path="*" element={<Navigate to="/" replace />} />
