@@ -30,6 +30,22 @@
     Header set Pragma "no-cache"
   </FilesMatch>
 
+  # Declared after the rule above so these win.
+  #
+  # sw.js is NOT fingerprinted — it keeps the same URL for the life of the app,
+  # and it is the file that decides what everything else caches. Serving it as
+  # immutable for a year would freeze the installed app on whatever version a
+  # user first got, with no way to ship a fix.
+  <Files "sw.js">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+  </Files>
+
+  # Same reasoning, less urgently: the manifest changes only between releases
+  # but must be allowed to.
+  <Files "manifest.webmanifest">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </Files>
+
   Header always set X-Content-Type-Options "nosniff"
   Header always set X-Frame-Options "SAMEORIGIN"
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
@@ -38,7 +54,13 @@
 <IfModule mod_deflate.c>
   AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript
   AddOutputFilterByType DEFLATE application/javascript application/json
-  AddOutputFilterByType DEFLATE image/svg+xml
+  AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>
+
+<IfModule mod_mime.c>
+  # Without the right type some browsers ignore the manifest, and the install
+  # option never appears.
+  AddType application/manifest+json .webmanifest
 </IfModule>
 
 # Directory listings should never be served from a built app.
