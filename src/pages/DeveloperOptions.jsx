@@ -27,6 +27,21 @@ export default function DeveloperOptions() {
   const [error, setError] = useState('');
   const [notice, setNotice] = useState('');
 
+  /*
+   * Version thresholds per exam client. `minimum` is the forcing one: anything
+   * below it is refused a paper by the API, not merely nagged. Left blank the
+   * whole feature is inert, which is the safe default — a wrong value here
+   * locks students out of exams.
+   */
+  const [releases, setReleases] = useState({
+    desktop: { latest: '', minimum: '', url: '', notes: '' },
+    android: { latest: '', minimum: '', url: '', notes: '' },
+    ios: { latest: '', minimum: '', url: '', notes: '' },
+  });
+
+  const setRelease = (platform, field, value) =>
+    setReleases((current) => ({ ...current, [platform]: { ...current[platform], [field]: value } }));
+
   const load = async () => {
     setLoading(true);
     setError('');
@@ -36,6 +51,7 @@ export default function DeveloperOptions() {
       setHealth(d.health);
       setUrl(d.settings.ai_processor_url || '');
       setEnabled(d.settings.ai_processor_enabled !== false);
+      if (d.releases) setReleases(d.releases);
     } catch (err) {
       setError(err.message);
     } finally {
@@ -54,7 +70,7 @@ export default function DeveloperOptions() {
     setNotice('');
 
     try {
-      const payload = { ai_processor_url: url.trim() || null, ai_processor_enabled: enabled };
+      const payload = { ai_processor_url: url.trim() || null, ai_processor_enabled: enabled, releases };
 
       // Only send the secret when one was actually typed. Sending an empty
       // string would clear the stored value, which is not what "I did not
@@ -167,6 +183,77 @@ export default function DeveloperOptions() {
 
           <button className="btn btn-primary" type="submit" disabled={saving}>
             {saving ? 'Saving…' : 'Save changes'}
+          </button>
+        </form>
+      </div>
+
+      <div className="card" style={{ marginTop: 20 }}>
+        <h2 className="section-title">Exam app versions</h2>
+        <p className="muted small" style={{ marginBottom: 4 }}>
+          <strong>Minimum</strong> forces an update: the API refuses to give a paper to anything older, so the
+          app cannot be used until it is updated. <strong>Latest</strong> only shows a dismissable notice.
+        </p>
+        <p className="muted small" style={{ marginBottom: 16 }}>
+          Leave a field blank to disable that check. A student already writing a paper is never interrupted —
+          submission is deliberately not gated.
+        </p>
+
+        <form onSubmit={save}>
+          {[
+            ['desktop', 'Desktop (Windows, macOS)'],
+            ['android', 'Android'],
+            ['ios', 'iOS'],
+          ].map(([platform, label]) => (
+            <div key={platform} className="release-block">
+              <h3 className="release-title">{label}</h3>
+
+              <div className="form-grid">
+                <label className="field">
+                  <span>Minimum version (forces update)</span>
+                  <input
+                    value={releases[platform]?.minimum ?? ''}
+                    onChange={(e) => setRelease(platform, 'minimum', e.target.value)}
+                    placeholder="e.g. 1.2.0"
+                  />
+                </label>
+
+                <label className="field">
+                  <span>Latest version</span>
+                  <input
+                    value={releases[platform]?.latest ?? ''}
+                    onChange={(e) => setRelease(platform, 'latest', e.target.value)}
+                    placeholder="e.g. 1.4.0"
+                  />
+                </label>
+              </div>
+
+              <label className="field">
+                <span>Download link</span>
+                <input
+                  value={releases[platform]?.url ?? ''}
+                  onChange={(e) => setRelease(platform, 'url', e.target.value)}
+                  placeholder={
+                    platform === 'desktop'
+                      ? 'https://github.com/codeskytz/skillflow-exam-desktop/releases/latest'
+                      : 'Store listing URL'
+                  }
+                />
+              </label>
+
+              <label className="field">
+                <span>What's new (shown on the update screen)</span>
+                <textarea
+                  rows={2}
+                  value={releases[platform]?.notes ?? ''}
+                  onChange={(e) => setRelease(platform, 'notes', e.target.value)}
+                  placeholder="Optional. Tell students why they need this version."
+                />
+              </label>
+            </div>
+          ))}
+
+          <button className="btn btn-primary" type="submit" disabled={saving}>
+            {saving ? 'Saving…' : 'Save versions'}
           </button>
         </form>
       </div>

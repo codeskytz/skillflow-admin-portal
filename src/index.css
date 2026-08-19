@@ -3453,3 +3453,24 @@ a {
   background: rgba(214, 69, 69, 0.07);
 }
 .processor-health-bad > svg { color: var(--danger); }
+
+/* ---------- Exam app release thresholds ---------- */
+
+/* Each platform is boxed so the two version fields are unmistakably a pair
+   belonging to one app — a minimum typed under the wrong heading would force
+   the wrong students to update. */
+.release-block {
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 14px 16px;
+  margin-bottom: 16px;
+}
+
+.release-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--navy-dark);
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 12px;
+}
