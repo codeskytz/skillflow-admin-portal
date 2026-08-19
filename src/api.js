@@ -123,6 +123,12 @@ export const api = {
     legacyArchiveEntry: (id) => request(`/admin/legacy-archive/${id}`),
     resolveLegacyArchive: (id, resolved = true) =>
       request(`/admin/legacy-archive/${id}/resolve`, { method: 'POST', body: { resolved } }),
+    // Developer options: the external AI processor's address and secret,
+    // changeable without a deploy.
+    developerSettings: () => request('/admin/developer-settings'),
+    updateDeveloperSettings: (payload) =>
+      request('/admin/developer-settings', { method: 'PUT', body: payload }),
+    testAiProcessor: () => request('/admin/developer-settings/test', { method: 'POST' }),
     tokenPackages: () => request('/admin/token-packages'),
     createTokenPackage: (payload) => request('/admin/token-packages', { method: 'POST', body: payload }),
     updateTokenPackage: (id, payload) => request(`/admin/token-packages/${id}`, { method: 'PUT', body: payload }),

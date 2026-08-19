@@ -3410,3 +3410,46 @@ a {
   background: var(--navy);
   color: var(--gold-light);
 }
+
+/* Whether the external AI processor is answering. Shown before an
+   administrator relies on an address, not after a student hits a failure. */
+.processor-health {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--off-white);
+}
+
+.processor-health > svg {
+  font-size: 20px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.processor-health > div {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.processor-health strong {
+  color: var(--navy-dark);
+  font-size: 15px;
+}
+
+.processor-health-ok {
+  border-color: rgba(46, 158, 91, 0.4);
+  background: rgba(46, 158, 91, 0.08);
+}
+.processor-health-ok > svg { color: var(--success); }
+
+.processor-health-bad {
+  border-color: rgba(214, 69, 69, 0.4);
+  background: rgba(214, 69, 69, 0.07);
+}
+.processor-health-bad > svg { color: var(--danger); }

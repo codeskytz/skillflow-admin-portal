@@ -13,6 +13,7 @@ const navItems = [
   { to: '/levels', label: 'Levels' },
   { to: '/token-packages', label: 'Token Packages' },
   { to: '/legacy-archive', label: 'Legacy Archive' },
+  { to: '/developer-options', label: 'Developer Options' },
   { to: '/profile', label: 'Profile' },
 ];
 
